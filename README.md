@@ -1,7 +1,7 @@
 # googleauth
 
-Example code for authenticating users using Google via OAuth2 and setting
-cookies in a web application.
+Example web application code to authenticate users using Google and set
+cookies.
 
 ## Resources
 

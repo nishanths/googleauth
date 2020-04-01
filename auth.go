@@ -217,7 +217,13 @@ func (s *service) authHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var expectState string
-	if err := stateCodec.Decode(CookieNameState, c.Value, &expectState); err != nil {
+	err = stateCodec.Decode(CookieNameState, c.Value, &expectState)
+	if isSecureCookieExpired(err) {
+		log.Printf("state cookie expired: %s", err)
+		http.Error(w, "error: try logging in again", http.StatusBadRequest)
+		return
+	}
+	if err != nil {
 		log.Printf("failed to decode state cookie: %s", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return

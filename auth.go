@@ -276,15 +276,16 @@ func (s *service) authHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Marshal for writing into cookie.
-	jsonUserInfo, err := json.Marshal(g)
+	b, err := json.Marshal(g)
 	if err != nil {
 		log.Printf("failed to json-encode user info: %s", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
+	jsonUserInfo := string(b)
 
 	// Set up writing of user info cookie.
-	encoded, err := userInfoCodec.Encode(CookieNameUserInfo, string(jsonUserInfo))
+	encoded, err := userInfoCodec.Encode(CookieNameUserInfo, jsonUserInfo)
 	if err != nil {
 		log.Printf("failed to encode cookie: %s", err)
 		http.Error(w, "internal server error", http.StatusInternalServerError)

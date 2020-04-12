@@ -18,4 +18,4 @@ dev: go
 
 .PHONY: clean
 clean:
-	rm -rf main
+	rm -f main

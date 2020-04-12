@@ -73,7 +73,7 @@ func userInfoCookieCodec(hashKey, blockKey string) (*securecookie.SecureCookie, 
 	return s.MaxAge(int(CookieAgeUserInfo / time.Second)), nil
 }
 
-// ErrNoUser is returned when there is no user logged in.
+// ErrNoUser is returned by currentUser when there is no user logged in.
 var ErrNoUser = errors.New("no current user")
 
 // currentUser returns the currently logged in user's info. If there is no
@@ -103,7 +103,7 @@ func (s *service) currentUser(r *http.Request) (GoogleUserInfo, error) {
 
 	var g GoogleUserInfo
 	if err := json.Unmarshal([]byte(jsonUserInfo), &g); err != nil {
-		return GoogleUserInfo{}, fmt.Errorf("failed to json unmarshal user info: %s", err)
+		return GoogleUserInfo{}, fmt.Errorf("failed to json-unmarshal user info: %s", err)
 	}
 
 	return g, nil
@@ -263,7 +263,7 @@ func (s *service) authHandler(w http.ResponseWriter, r *http.Request) {
 	defer drainAndClose(rsp.Body)
 
 	if rsp.StatusCode/100 != 2 {
-		log.Printf("bad status code: %d", rsp.StatusCode)
+		log.Printf("bad status code from google: %d", rsp.StatusCode)
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
